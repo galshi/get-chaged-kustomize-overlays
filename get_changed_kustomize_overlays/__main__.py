@@ -144,7 +144,7 @@ def main():
     for overlay_path in args.base_overlays:
         base_overlays.add(Path(overlay_path).resolve(strict=True))
 
-    print(str(get_changed_overlays(changed_files, base_overlays)),
+    print(' '.join(str(overlay) for overlay in get_changed_overlays(changed_files, base_overlays)),
           file=open(args.output_file, 'w') if args.output_file else None)
 
 
