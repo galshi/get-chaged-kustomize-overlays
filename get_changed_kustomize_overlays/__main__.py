@@ -1,3 +1,4 @@
+import pathlib
 from pathlib import Path
 from argparse import ArgumentParser
 from typing import Set, List
@@ -12,7 +13,7 @@ import os
 def is_url(url):
     try:
         result = urlparse(url)
-        return bool(result.path)
+        return any([result.query, result.netloc, result.scheme])
     except ValueError:
         return False
 
@@ -33,6 +34,10 @@ def extract_kustomization_dependencies(kustomization: dict) -> Set[Path]:
     if 'components' in kustomization:
         overlay_dependencies |= \
             set(Path(component).resolve(strict=True) for component in kustomization['components'])
+
+    if 'generators' in kustomization:
+        overlay_dependencies |= \
+            set(Path(component).resolve(strict=True) for component in kustomization['generators'])
 
     if 'crd' in kustomization:
         overlay_dependencies |= \
@@ -95,6 +100,7 @@ def get_overlay_dependencies(overlay: Path) -> Set[Path]:
 
     # Change working directory to the path to the overlay
     # so that we could resolve the absolute path of it's dependencies
+    previous_cwd = pathlib.Path.cwd()
     os.chdir(str(overlay.parent))
 
     overlay_dependencies = extract_kustomization_dependencies(kustomization)
@@ -108,6 +114,9 @@ def get_overlay_dependencies(overlay: Path) -> Set[Path]:
 
     # Add self as well, necessary in base overlay as it is dependent on itself
     overlay_dependencies.add(overlay)
+
+    # Return old cwd
+    os.chdir(previous_cwd)
 
     return overlay_dependencies
 
@@ -144,7 +153,7 @@ def main():
     for overlay_path in args.base_overlays:
         base_overlays.add(Path(overlay_path).resolve(strict=True))
 
-    print(str(get_changed_overlays(changed_files, base_overlays)),
+    print(' '.join(str(overlay) for overlay in get_changed_overlays(changed_files, base_overlays)),
           file=open(args.output_file, 'w') if args.output_file else None)
 
 

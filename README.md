@@ -31,7 +31,7 @@ python -m get-changed-kustomize-overlays --changed-files folder1/file1.yaml fold
 ```bash
 OVERLAYS=$(find . -regex '.*/overlays/[a-z]*/kustomization.yaml' | tr '\n' ' ')
 CHANGED_FILES=$(git diff --name-only $CI_MERGE_REQUEST_TARGET_BRANCH_SHA $CI_MERGE_REQUEST_SOURCE_BRANCH_SHA | tr '\n' ' ')
-python -m get-changed-kustomize-overlays --changed-files $CHANGED_FILES --base-overlays $OVERLAYS
+python -m get-changed-kustomize-overlays --changed-files $(echo $CHANGED_FILES) --base-overlays $(echo $OVERLAYS)cd
 ```
 
 # External dependencies

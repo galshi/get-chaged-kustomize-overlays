@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="get_changed_kustomize_overlays",
-    version="0.1.1",
+    version="0.1.2",
     author="Gal Shinder",
     author_email="galsh1304@gmail.com",
     description="A tool that helps you to test only those kustomize overlays that were affected by a merge in your CI.",
