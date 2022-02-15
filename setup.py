@@ -8,8 +8,7 @@ setuptools.setup(
     version="0.1.1",
     author="Gal Shinder",
     author_email="galsh1304@gmail.com",
-    description="A tool that recursively calculates the dependencies of a given overlay "
-                "and compares them with the files changed by a merge request",
+    description="A tool that helps you to test only those kustomize overlays that were affected by a merge in your CI.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/galshi/get-chaged-kustomize-overlays",
